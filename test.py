@@ -47,7 +47,8 @@ def get_data(cardname, edition):
     # Check case where no Price Trend is shown:
     if len(data[0]) > 2:
         data[0] = data[1]
-        data[1] = ["0,0 €"]
+        data[1] = data[2]
+        data[2] = ["0,0 €"]
     
     # Num units already number
     data[0] = int(data[0][0])
@@ -92,27 +93,64 @@ def load_data(cardName):
     with open(path,'rb') as f:
         return pickle.load(f)
 
+def get_needed_emoji(first,second):
+    if first > second:
+        return "up_arrow"
+    elif first == second:
+        return "stop_button"
+    else:
+        return "down_arrow"
 
 def check_price_change(cardName, price = 'from'):
 
+
     data = load_data(cardName)
+    col = data[price].to_numpy()
+    if len(col) < 2:
+        print("Not enough data to check variation")
+        return
+
+    lowest = min(col)
+    current = col[-1]
+    previous = col[-2]
+
+    num_updates = 0
+    for i in range(len(col)-1):
+        num_updates +=1
+        if col[-i-2] != current:
+            previous = col[-i-2]
+            break
+    
+    em1 = get_needed_emoji(current,lowest)
+    em2 = get_needed_emoji(current,previous)
+
+    print("Variation in: {}".format(cardName))
+    print(emoji.emojize("\t Current price {}".format(current)))
+    print(emoji.emojize("\t Last price    {} :{}:".format(previous, em2)))
+    print(emoji.emojize("\t Min  price    {} :{}:".format(lowest, em1)))
+
+    print("(Number of updates since last change: {})".format(num_updates))
 
 
+print("-----------------------")
+
+def update_data(filename = "cardList.txt"):
+    cards = read_file(filename)
+    print("Getting data...")
+    for name, expansion in tqdm(cards):
+        #print(name,expansion)
+        try:
+            data = get_data(name,expansion)
+            save_data(name,data)
+
+        except:
+            print("Couldn't retrieve data from card:{}".format(name))
+
+def check_all_price_changes(filename = "cardList.txt", price = 'from'):
+    cards = read_file(filename)
+    for name,_ in cards:
+        check_price_change(name,price)
 
 
-#data = get_data("Seachrome Coast", "Phyrexia: All Will Be One")
-#print(data)
-#save_data("Seachrome Coast", data)
-
-# up: up_arrow	
-# down: down_arrow
-
-print(emoji.emojize('Hello! :smiling_face_with_hearts:'))
-
-cards = read_file("cardList.txt")
-for name, expansion in tqdm(cards):
-    #print(name,expansion)
-    try:
-        save_data(name, get_data(name,expansion))
-    except:
-        print("Couldn't retrieve data from card:{}".format(name))
+#update_data()
+check_all_price_changes()
