@@ -2,11 +2,12 @@
 from bs4 import BeautifulSoup
 import numpy as np
 import requests
-from selenium import webdriver
 from datetime import datetime
 import pickle
 import pandas as pd
 import os
+from tqdm import tqdm
+import emoji
 # URL Example:
 # https://www.cardmarket.com/en/Magic/Products/Singles/Phyrexia-All-Will-Be-One/Minor-Misstep?language=1&minCondition=2
 BASE_URL = "https://www.cardmarket.com/en/Magic/Products/Singles/{}/{}?language=1&minCondition=2"
@@ -38,15 +39,27 @@ def get_data(cardname, edition):
     url = BASE_URL.format(edition,card)
     soup = get_soup(url)
     Prices_uncut = soup.find_all("dd", class_="col-6 col-xl-7")
+
     
     # Data: Copies, From, Trend, 30 days trend,7 days trend, day trend
     data = [a.contents for a in Prices_uncut[-6:]]
-    print(data)
+
+    # Check case where no Price Trend is shown:
+    if len(data[0]) > 2:
+        data[0] = data[1]
+        data[1] = ["0,0 €"]
+    
+    # Num units already number
     data[0] = int(data[0][0])
     for i,d in enumerate(data[1:]):
+        # Preprocess output from the contents <span>NUMBER € </span>
         d = str(d[0]).replace('<span>',"")
         d = d.replace('</span>',"")
-        d = float(d[:-2].replace(',','.'))
+        # Check case where no data for trends
+        if d != 'N/A':
+            d = float(d[:-2].replace(',','.'))
+        else:
+            d = 0.0
         data[i+1] = d
 
     date = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
@@ -80,16 +93,26 @@ def load_data(cardName):
         return pickle.load(f)
 
 
+def check_price_change(cardName, price = 'from'):
 
-#print(read_file('cardList.txt'))
-#exit()
-data = get_data("Minor Misstep", "Phyrexia: All Will Be One")
-save_data("Minor Misstep", data)
-d = load_data("Minor Misstep")
-print(d)
+    data = load_data(cardName)
+
+
+
+
+#data = get_data("Seachrome Coast", "Phyrexia: All Will Be One")
+#print(data)
+#save_data("Seachrome Coast", data)
+
+# up: up_arrow	
+# down: down_arrow
+
+print(emoji.emojize('Hello! :smiling_face_with_hearts:'))
 
 cards = read_file("cardList.txt")
-for name, expansion in cards:
+for name, expansion in tqdm(cards):
     #print(name,expansion)
-    save_data(name, get_data(name,expansion))
-    print(load_data(name))
+    try:
+        save_data(name, get_data(name,expansion))
+    except:
+        print("Couldn't retrieve data from card:{}".format(name))
