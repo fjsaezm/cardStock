@@ -1,9 +1,0 @@
-https://www.cardmarket.com/en/Magic/Products/Singles/Phyrexia-All-Will-Be-One/Minor-Misstep?language=1&minCondition=2
-<dd class="col-6 col-xl-7"><span class="icon" data-html="true" data-original-title="Uncommon" data-placement="bottom" data-toggle="tooltip" onmouseout="hideMsgBox()" onmouseover="showMsgBox(this,`Uncommon`)" style="display: inline-block; width: 16px; height: 16px; background-image: url('//static.cardmarket.com/img/f1be90b4c269c6be30fec8e3fc30f67f/spriteSheets/ssRarity/ssRarity1.png'); background-position: -128px -0px;" title="Uncommon"></span></dd>
-<dd class="col-6 col-xl-7"><div class="d-flex align-items-center"><a class="expansion-symbol is-magic icon is-24x24" data-html="true" data-placement="bottom" data-toggle="tooltip" href="/en/Magic/Expansions/Phyrexia-All-Will-Be-One" title="Phyrexia: All Will Be One"><span style="display: inline-block; width: 21px; height: 21px; background-image: url('//static.cardmarket.com/img/154ced79e5a5ac1127bf4f0a171e9bc5/expansionicons/expicons.png'); background-position: -147px -1890px;"></span></a><a class="mb-2" href="/en/Magic/Expansions/Phyrexia-All-Will-Be-One">Phyrexia: All Will Be One</a></div></dd>
-<dd class="col-6 col-xl-7">177</dd>
-<dd class="col-6 col-xl-7">2,98 €</dd>
-<dd class="col-6 col-xl-7"><span>1,98 €</span></dd>
-<dd class="col-6 col-xl-7"><span>1,98 €</span></dd>
-<dd class="col-6 col-xl-7"><span>1,98 €</span></dd>
-<dd class="col-6 col-xl-7"><span>1,98 €</span></dd>
