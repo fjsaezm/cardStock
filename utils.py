@@ -35,8 +35,22 @@ def read_set_cards(filename):
     cards = [[a['name'], a['rarity']]
              for a in cards if 'boosterTypes' in a.keys() and a['boosterTypes'] == ['draft']]
 
-    return cards
+    unique_cards = []
+    # This is not optimal.
+    # Made due to how the JSON is generated
+    # Cards are repeated if they are double faced
+    for name,rarity in cards:
+        previously = False
+        for other_name,_ in cards:
+            if name in other_name and name != other_name:
+                previously = True
+                break
+        if not previously:
+            unique_cards.append([name, rarity])
+            
+
+    return unique_cards
 
 
-print(name_to_url_part("Phyrexian Dragon Engine // Mishra, Lost to Phyrexia"))
+#print(name_to_url_part("Phyrexian Dragon Engine // Mishra, Lost to Phyrexia"))
 # read_set_cards("set-json/BRO.json")

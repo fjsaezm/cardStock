@@ -39,12 +39,12 @@ def get_data(cardname, edition):
     data = [a.contents for a in Prices_uncut[-6:]]
 
     # Check case where no Price Trend is shown:
-    
+
     if len(data[0]) >= 2 or type(data[0][0]) != bs4.element.NavigableString:
         data[0] = data[1]
         data[1] = data[2]
         data[2] = ["0,0 €"]
-    
+  
     # Num units already number
     data[0] = int(data[0][0])
     for i,d in enumerate(data[1:]):
@@ -53,7 +53,9 @@ def get_data(cardname, edition):
         regex_to_remove = "<span>|</span>|£"
         d = remove_regex_from_string(str(d[0]), regex_to_remove)
         if d != 'N/A':
-            d = float(d[:-2].replace(',','.'))
+            d = remove_regex_from_string(d, ' €')
+            d = d.replace(',','.')
+            #d = float(d[:-2].replace(',','.'))
         else:
             d = 0.0
         data[i+1] = d
@@ -63,8 +65,12 @@ def get_data(cardname, edition):
 
     return data
 
-def get_min_price(card_name, edition):
-    return get_data(card_name, edition)[1]
+def get_sell_prices(card_name, edition):
+    # Returns min and avg prices
+
+    data = get_data(card_name,edition)
+
+    return data[1], data[2]
 
 def save_data(cardName, data):
     path = SAVE_DIR + name_to_url_part(cardName)+'.csv'
@@ -144,8 +150,8 @@ def check_all_price_changes(filename = "cardList.txt", price = 'from'):
         check_price_change(name,price)
 
 
-update_data()
-check_all_price_changes()
+#update_data()
+#check_all_price_changes()
 
 
 # This card is only from the extras
